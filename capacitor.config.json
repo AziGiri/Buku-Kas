@@ -1,0 +1,14 @@
+{
+  "appId": "com.bukukas.app",
+  "appName": "Buku Kas",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "GANTI_DENGAN_URL_WEB_APP_ANDA",
+    "androidScheme": "https",
+    "cleartext": false
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
