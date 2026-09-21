@@ -23,6 +23,13 @@ jobs:
       - name: Tambahkan platform Android
         run: npx cap add android
 
+      - name: Pasang penanganan tombol kembali (MainActivity)
+        run: |
+          set -e
+          TUJUAN=android/app/src/main/java/com/bukukas/app/MainActivity.java
+          test -f "$TUJUAN"
+          cp native/MainActivity.java "$TUJUAN"
+
       - name: Sinkronkan Capacitor
         run: npx cap sync android
 
