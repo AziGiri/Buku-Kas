@@ -170,6 +170,51 @@ button{cursor:pointer}
 .tools .input{max-width:320px;height:42px}
 .chip{height:42px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-weight:600;font-size:14px}
 .chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip[hidden]{display:none}
+.acts{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rc{margin-bottom:14px;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.rc-head{display:flex;align-items:center;gap:12px;width:100%;padding:12px 16px;border:0;background:transparent;text-align:left}
+.rc-ico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:999px;background:var(--paper);color:var(--ink);flex:none}
+.rc-t{flex:1;min-width:0;display:grid}
+.rc-t b{font-size:15px}
+.rc-t small{color:var(--muted);font-size:13px;font-weight:600}
+.rc-chev{color:var(--muted);transition:transform .2s}
+.rc-head[aria-expanded="true"] .rc-chev{transform:rotate(180deg)}
+.rc-body{border-top:1px solid var(--line)}
+.rc-note{padding:10px 16px;background:var(--paper);color:var(--muted);font-size:13px}
+.rc-add{padding:12px 16px;border-top:1px solid var(--line)}
+.rc .empty{padding:20px 16px}
+.row.sub{padding:10px 20px;background:#fff}
+.row.sub .r-main b{font-size:14px;color:var(--muted)}
+.grp-date .cd{font-weight:600}
+.dtb{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+.dtb.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.sheet-bg{position:fixed;inset:0;z-index:90;background:rgba(18,38,46,.5);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:520px;max-height:94vh;overflow:auto;background:#fff;border-radius:24px 24px 0 0;padding:18px 18px calc(16px + env(safe-area-inset-bottom));animation:naik .22s ease-out}
+@keyframes naik{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.sh-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.sh-head h2{font-size:20px;font-weight:800}
+.sh-x{width:40px;height:40px;border-radius:999px;border:0;background:var(--paper);display:inline-flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+.sh-info{min-height:22px;margin-bottom:6px;color:var(--muted);font-size:14px;font-weight:600}
+.sh-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.sh-nav b{font-size:16px;font-weight:800}
+.sh-week,.sh-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.sh-grid{grid-auto-rows:46px}
+.sh-week span{padding:6px 0;text-align:center;font-size:12px;font-weight:700;color:var(--muted)}
+.dc{display:flex;align-items:center;justify-content:center}
+.dc .d{width:40px;height:40px;border-radius:999px;border:1.5px solid transparent;background:transparent;font-weight:600;font-size:15px;color:var(--text)}
+.dc.today .d{border-color:var(--muted)}
+.dc.mid{background:#DCE5E7}
+.dc.mid:nth-child(7n+1){border-radius:999px 0 0 999px}
+.dc.mid:nth-child(7n){border-radius:0 999px 999px 0}
+.dc.st.rg{background:linear-gradient(90deg,transparent 50%,#DCE5E7 50%)}
+.dc.en.rg{background:linear-gradient(90deg,#DCE5E7 50%,transparent 50%)}
+.dc.sel .d{background:var(--ink);border-color:var(--ink);color:#fff}
+.sh-pre{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 2px}
+.sh-foot{display:flex;align-items:center;gap:4px;margin-top:12px}
+.sh-foot .sp{flex:1}
+.sh-lnk{border:0;background:none;padding:10px 12px;font-weight:700;color:var(--muted)}
+.sh-ok{height:46px;padding:0 28px;border-radius:999px;border:0;background:var(--ink);color:#fff;font-weight:700}
 .table{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .grp-date{display:flex;justify-content:space-between;gap:12px;padding:12px 20px 6px;font-size:13px;font-weight:700;color:var(--muted);background:var(--paper)}
 .grp:first-child .grp-date{border-top:0}
@@ -339,6 +384,36 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- ================= PANEL RENTANG TANGGAL ================= -->
+<div class="sheet-bg" id="shBg" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shJudul">
+    <div class="sh-head">
+      <h2 id="shJudul">Pilih Tanggal</h2>
+      <button type="button" class="sh-x" id="shTutup" aria-label="Tutup"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sh-info" id="shInfo"></div>
+    <div class="sh-nav">
+      <button type="button" class="sh-x" id="shPrev" aria-label="Bulan sebelumnya"><svg class="ico" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <b id="shBulan"></b>
+      <button type="button" class="sh-x" id="shNext" aria-label="Bulan berikutnya"><svg class="ico" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+    </div>
+    <div class="sh-week" aria-hidden="true"><span>M</span><span>S</span><span>S</span><span>R</span><span>K</span><span>J</span><span>S</span></div>
+    <div class="sh-grid" id="shGrid"></div>
+    <div class="sh-pre">
+      <button type="button" class="chip sm" data-pre="hari">Hari ini</button>
+      <button type="button" class="chip sm" data-pre="7">7 hari terakhir</button>
+      <button type="button" class="chip sm" data-pre="bulan">Bulan ini</button>
+      <button type="button" class="chip sm" data-pre="lalu">Bulan lalu</button>
+    </div>
+    <div class="sh-foot">
+      <button type="button" class="sh-lnk" id="shReset">Reset</button>
+      <span class="sp"></span>
+      <button type="button" class="sh-lnk" id="shBatal">Batal</button>
+      <button type="button" class="sh-ok" id="shOke">Oke</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function () {
   'use strict';
@@ -409,8 +484,9 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
   var state = {
     token: null, view: 'dashboard', bulan: bulanIni(),
     data: { masuk: [], keluar: [] },
-    semua: { masuk: false, keluar: false },
+    tgl: { masuk: { dari: '', sampai: '' }, keluar: { dari: '', sampai: '' } },
     cari: { masuk: '', keluar: '' },
+    rencana: { masuk: [], keluar: [] }, rcBuka: { masuk: false, keluar: false },
     edit: null, jenis: 'masuk', hapus: null, dash: null,
     rataRentang: { hari: 30, tagihan: nominalSimpan.get() }, keluarSemua: [],
     laporanRentang: { dari: bulanIni() + '-01', sampai: hariIni() }
@@ -490,6 +566,7 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
     if ($('#login').hidden === false) return;
     state.token = null; store.del(); cache.bersih();
     $$('dialog[open]').forEach(function (d) { d.close(); });
+    tutupSheet();
     tampilLogin('Sesi berakhir. Silakan masuk lagi.');
   }
   function bukaAplikasi() {
@@ -574,13 +651,14 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
     }
 
     var j = state.view;
-    var key = kunciTrx(j, state.semua[j] ? '' : state.bulan);
+    var key = kunciTrx(j, bulanMuat(j));
     var c = cache.get(key);
     state.data[j] = c ? c.items : [];
     renderList(j);
+    muatRencana(j);
     if (!c) $('#list-' + j).innerHTML = '<p class="empty">Memuat data...</p>';
 
-    panggil(!!c || diam, 'getTransaksi', [state.token, j, state.semua[j] ? '' : state.bulan]).then(function (res) {
+    panggil(!!c || diam, 'getTransaksi', [state.token, j, bulanMuat(j)]).then(function (res) {
       cache.set(key, res);
       if (my !== seq) return;
       if (!c || !sama(c, res)) { state.data[j] = res.items; renderList(j); }
@@ -592,7 +670,7 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
   // Ambil diam-diam data menu lain agar berpindah menu terasa instan
   function prefetch() {
     ['masuk', 'keluar'].forEach(function (j) {
-      var bln = state.semua[j] ? '' : state.bulan;
+      var bln = bulanMuat(j);
       var key = kunciTrx(j, bln);
       if (cache.get(key)) return;
       panggil(true, 'getTransaksi', [state.token, j, bln]).then(function (res) { cache.set(key, res); }).catch(function () {});
@@ -699,31 +777,205 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
   }
 
   /* ---------- daftar transaksi ---------- */
+  var IKON_KALENDER = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>';
+
+  // Filter tanggal aktif jika "Dari tanggal" terisi; "Sampai tanggal" kosong = satu tanggal saja
+  function filterAktif(j) { return !!state.tgl[j].dari; }
+  // Saat filter aktif, seluruh data dimuat agar rentang boleh melewati beberapa bulan
+  function bulanMuat(j) { return filterAktif(j) ? '' : state.bulan; }
+  function dalamRentang(j, tanggal) {
+    var f = state.tgl[j];
+    if (!f.dari) return true;
+    return tanggal >= f.dari && tanggal <= (f.sampai || f.dari);
+  }
+
   function bangunList(j) {
     var m = j === 'masuk';
     $('#v-' + j).innerHTML =
       '<div class="bar"><div class="sum ' + (m ? 'in' : 'out') + '"><small id="lbl-' + j + '"></small><b id="sum-' + j + '">Rp 0</b></div>' +
-      '<button class="btn small ' + (m ? 'in' : 'out') + '" data-tambah="' + j + '">' + (m ? 'Tambah uang masuk' : 'Tambah uang keluar') + '</button></div>' +
-      '<div class="tools"><input class="input" id="q-' + j + '" type="search" placeholder="Cari kategori atau keterangan" aria-label="Cari transaksi">' +
-      '<button class="chip" id="all-' + j + '" aria-pressed="false">Semua bulan</button></div>' +
+      '<div class="acts"><button class="btn small ' + (m ? 'in' : 'out') + '" data-tambah="' + j + '">' + (m ? 'Tambah uang masuk' : 'Tambah uang keluar') + '</button>' +
+      '<button type="button" class="dtb" id="dtb-' + j + '" aria-label="Filter tanggal">' + IKON_KALENDER + '</button>' +
+      '<button class="chip sm" id="rst-' + j + '" hidden>Hapus filter</button></div></div>' +
+      '<div class="rc" id="rc-' + j + '">' +
+        '<button type="button" class="rc-head" id="rch-' + j + '" aria-expanded="false">' +
+          '<span class="rc-ico"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>' +
+          '<span class="rc-t"><b>Rencana ' + (m ? 'uang masuk' : 'uang keluar') + '</b><small id="rcs-' + j + '">Memuat...</small></span>' +
+          '<svg class="ico rc-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>' +
+        '</button>' +
+        '<div class="rc-body" id="rcb-' + j + '" hidden>' +
+          '<div class="rc-note">Belum memengaruhi saldo. Otomatis dicatat saat tanggalnya tiba.</div>' +
+          '<div id="rcl-' + j + '"></div>' +
+          '<div class="rc-add"><button type="button" class="btn small ghost" data-tambah="rencana_' + j + '">Tambah rencana</button></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="tools"><input class="input" id="q-' + j + '" type="search" placeholder="Cari kategori atau keterangan" aria-label="Cari transaksi"></div>' +
       '<div class="table" id="list-' + j + '"></div>';
 
     $('#q-' + j).addEventListener('input', function () { state.cari[j] = this.value; renderList(j); });
-    $('#all-' + j).addEventListener('click', function () {
-      state.semua[j] = !state.semua[j];
-      this.setAttribute('aria-pressed', state.semua[j] ? 'true' : 'false');
-      muat();
+
+    $('#dtb-' + j).addEventListener('click', function () { bukaSheet(j); });
+    $('#rch-' + j).addEventListener('click', function () {
+      state.rcBuka[j] = !state.rcBuka[j];
+      this.setAttribute('aria-expanded', state.rcBuka[j] ? 'true' : 'false');
+      $('#rcb-' + j).hidden = !state.rcBuka[j];
     });
+    $('#rst-' + j).addEventListener('click', function () { setRentang(j, '', ''); muat(); });
+  }
+
+  // Atur filter tanggal satu daftar (tanpa memuat ulang)
+  function setRentang(j, dari, sampai) {
+    state.tgl[j] = { dari: dari, sampai: sampai };
+    var r = $('#rst-' + j), w = $('#dtb-' + j);
+    if (r) r.hidden = !dari;
+    if (w) w.classList.toggle('on', !!dari);
+  }
+  function resetTgl() { setRentang('masuk', '', ''); setRentang('keluar', '', ''); }
+
+  /* ---------- panel kalender rentang tanggal ---------- */
+  var sh = { j: 'masuk', dari: '', sampai: '', bulan: bulanIni() };
+
+  function bukaSheet(j) {
+    var f = state.tgl[j];
+    sh.j = j; sh.dari = f.dari; sh.sampai = f.sampai;
+    sh.bulan = (f.dari || state.bulan).slice(0, 7);
+    gambarSheet();
+    $('#shBg').hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function tutupSheet() {
+    var bg = $('#shBg');
+    if (bg) bg.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  function gambarSheet() {
+    var y = Number(sh.bulan.slice(0, 4)), m = Number(sh.bulan.slice(5, 7));
+    var awal = new Date(y, m - 1, 1).getDay();            // 0 = Minggu
+    var jumlah = new Date(y, m, 0).getDate();
+    var hari = hariIni();
+    var ada = sh.sampai && sh.sampai !== sh.dari;
+    var html = '';
+
+    for (var k = 0; k < awal; k++) html += '<span class="dc"></span>';
+    for (var d = 1; d <= jumlah; d++) {
+      var t = sh.bulan + '-' + p2(d);
+      var kelas = 'dc';
+      if (t === hari) kelas += ' today';
+      if (t === sh.dari || (ada && t === sh.sampai)) kelas += ' sel';
+      if (ada && t === sh.dari) kelas += ' st rg';
+      if (ada && t === sh.sampai) kelas += ' en rg';
+      if (ada && t > sh.dari && t < sh.sampai) kelas += ' mid';
+      html += '<span class="' + kelas + '"><button type="button" class="d" data-t="' + t + '">' + d + '</button></span>';
+    }
+    $('#shGrid').innerHTML = html;
+    $('#shBulan').textContent = labelBulan(sh.bulan);
+
+    var info = 'Ketuk tanggal awal, lalu tanggal akhir';
+    if (sh.dari && !ada) info = tgl(sh.dari) + ' \u00B7 ketuk tanggal akhir untuk rentang';
+    if (ada) info = tgl(sh.dari) + ' \u2013 ' + tgl(sh.sampai) + ' \u00B7 ' + selisihHari(sh.dari, sh.sampai) + ' hari';
+    $('#shInfo').textContent = info;
+  }
+
+  function pilihTgl(t) {
+    if (sh.dari && !sh.sampai && t !== sh.dari) {
+      if (t < sh.dari) { sh.sampai = sh.dari; sh.dari = t; } else { sh.sampai = t; }
+    } else {
+      sh.dari = t; sh.sampai = '';
+    }
+    gambarSheet();
+  }
+
+  $('#shGrid').addEventListener('click', function (e) {
+    var b = e.target.closest('.d');
+    if (b) pilihTgl(b.getAttribute('data-t'));
+  });
+  $('#shPrev').addEventListener('click', function () { sh.bulan = geser(sh.bulan, -1); gambarSheet(); });
+  $('#shNext').addEventListener('click', function () { sh.bulan = geser(sh.bulan, 1); gambarSheet(); });
+  $('#shReset').addEventListener('click', function () { sh.dari = ''; sh.sampai = ''; gambarSheet(); });
+  $('#shBatal').addEventListener('click', tutupSheet);
+  $('#shTutup').addEventListener('click', tutupSheet);
+  $('#shBg').addEventListener('click', function (e) { if (e.target === this) tutupSheet(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !$('#shBg').hidden) tutupSheet();
+  });
+  $('#shOke').addEventListener('click', function () {
+    var b = (sh.sampai && sh.sampai !== sh.dari) ? sh.sampai : '';
+    setRentang(sh.j, sh.dari, b);
+    tutupSheet();
+    muat();
+  });
+  $$('.sh-pre [data-pre]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var k = this.getAttribute('data-pre'), a = '', b = '';
+      if (k === 'hari') { a = hariIni(); }
+      else if (k === '7') { a = tambahHari(hariIni(), -6); b = hariIni(); }
+      else if (k === 'bulan') { a = bulanIni() + '-01'; b = akhirBulan(bulanIni()); }
+      else { var bl = geser(bulanIni(), -1); a = bl + '-01'; b = akhirBulan(bl); }
+      sh.dari = a; sh.sampai = b; sh.bulan = a.slice(0, 7);
+      gambarSheet();
+    });
+  });
+
+  /* ---------- rencana uang masuk / keluar ---------- */
+  function hariLagi(t) {
+    var n = selisihHari(hariIni(), t) - 1;
+    return n <= 0 ? 'Hari ini' : (n === 1 ? 'Besok' : n + ' hari lagi');
+  }
+
+  function renderRencana(b) {
+    var sub = $('#rcs-' + b), box = $('#rcl-' + b);
+    if (!sub || !box) return;
+    var items = state.rencana[b], m = b === 'masuk';
+    var total = items.reduce(function (a, t) { return a + t.jumlah; }, 0);
+    sub.textContent = items.length ? items.length + ' rencana \u00B7 ' + rp(total) : 'Belum ada rencana';
+
+    if (!items.length) {
+      box.innerHTML = '<p class="empty">Belum ada rencana ' + (m ? 'uang masuk' : 'uang keluar') + '.</p>';
+      return;
+    }
+    var per = {};
+    items.forEach(function (t) { (per[t.tanggal] = per[t.tanggal] || []).push(t); });
+    box.innerHTML = Object.keys(per).sort().map(function (tg) {
+      var baris = per[tg].slice().sort(function (a, c) {
+        return String(a.keterangan || '').toLowerCase().localeCompare(String(c.keterangan || '').toLowerCase(), 'id');
+      });
+      var tanda = m ? '+' : '\u2212';
+      var totalTgl = baris.reduce(function (a, t) { return a + t.jumlah; }, 0);
+      return '<div class="grp"><div class="grp-date"><span>' + esc(namaHari(tg)) + ', ' + esc(tgl(tg)) + '</span><span class="cd">' + hariLagi(tg) + '</span></div>' +
+        baris.map(function (t) {
+          return '<div class="row">' +
+            '<div class="r-main"><b>' + esc(t.kategori) + '</b>' + (t.keterangan ? '<span>' + esc(t.keterangan) + '</span>' : '') + '</div>' +
+            '<div class="r-amt amt ' + (m ? 'in' : 'out') + '">' + tanda + rp(t.jumlah) + '</div>' +
+            '<div class="r-act"><button class="lnk" data-rc="ubah" data-id="' + esc(t.id) + '">Ubah</button>' +
+            '<button class="lnk del" data-rc="hapus" data-id="' + esc(t.id) + '">Hapus</button></div></div>';
+        }).join('') +
+        (baris.length > 1
+          ? '<div class="row sub"><div class="r-main"><b>Total</b></div><div class="r-amt amt ' + (m ? 'in' : 'out') + '">' + tanda + rp(totalTgl) + '</div><div></div></div>'
+          : '') +
+        '</div>';
+    }).join('');
+  }
+
+  function muatRencana(b) {
+    var key = 'rc:' + b, c = cache.get(key);
+    if (c) { state.rencana[b] = c.items; renderRencana(b); }
+    panggil(true, 'getTransaksi', [state.token, 'rencana_' + b, '']).then(function (res) {
+      cache.set(key, res);
+      if (!c || !sama(c, res)) { state.rencana[b] = res.items; renderRencana(b); }
+    }).catch(function () {});
   }
 
   function renderList(j) {
     var q = state.cari[j].trim().toLowerCase();
+    var f = state.tgl[j];
     var items = state.data[j].filter(function (t) {
+      if (!dalamRentang(j, t.tanggal)) return false;
       return !q || (t.kategori + ' ' + t.keterangan).toLowerCase().indexOf(q) >= 0;
     });
     var total = items.reduce(function (a, t) { return a + t.jumlah; }, 0);
     var nama = j === 'masuk' ? 'uang masuk' : 'uang keluar';
-    var rentang = state.semua[j] ? 'seluruh waktu' : labelBulan(state.bulan);
+    var rentang = labelBulan(state.bulan);
+    if (f.dari) rentang = (f.sampai && f.sampai !== f.dari) ? tgl(f.dari) + ' \u2013 ' + tgl(f.sampai) : tgl(f.dari);
 
     $('#lbl-' + j).textContent = 'Total ' + nama + ', ' + rentang + ' (' + items.length + ' catatan)';
     $('#sum-' + j).textContent = rp(total);
@@ -764,16 +1016,18 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
 
   /* ---------- form transaksi ---------- */
   function bukaForm(j, item) {
+    var rc = j.indexOf('rencana_') === 0, dasar = rc ? j.slice(8) : j;
     state.jenis = j; state.edit = item || null;
-    $('#fTitle').textContent = (item ? 'Ubah ' : 'Tambah ') + (j === 'masuk' ? 'uang masuk' : 'uang keluar');
-    $('#fTgl').value = item ? item.tanggal : hariIni();
+    $('#fTitle').textContent = (item ? 'Ubah ' : 'Tambah ') + (rc ? 'rencana ' : '') + (dasar === 'masuk' ? 'uang masuk' : 'uang keluar');
+    $('#fTgl').value = item ? item.tanggal : (rc ? tambahHari(hariIni(), 1) : hariIni());
+    if (rc) $('#fTgl').min = hariIni(); else $('#fTgl').removeAttribute('min');
     $('#fKat').value = item ? item.kategori : '';
     $('#fJml').value = item ? nf.format(item.jumlah) : '';
     $('#fKet').value = item ? item.keterangan : '';
     $('#fErr').textContent = '';
 
     var pakai = {}, opsi = [];
-    KATEGORI[j].concat(state.data[j].map(function (t) { return t.kategori; })).forEach(function (k) {
+    KATEGORI[dasar].concat(state.data[dasar].map(function (t) { return t.kategori; })).forEach(function (k) {
       if (!pakai[k]) { pakai[k] = 1; opsi.push(k); }
     });
     $('#dlKat').innerHTML = opsi.map(function (k) { return '<option value="' + esc(k) + '">'; }).join('');
@@ -796,13 +1050,22 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
     if (!$('#fTgl').value) { $('#fErr').textContent = 'Tanggal wajib diisi.'; return; }
 
     var btn = $('#fSimpan'); btn.disabled = true; btn.textContent = 'Menyimpan...';
-    var j = state.jenis;
+    var j = state.jenis, rc = j.indexOf('rencana_') === 0;
+    if (rc && $('#fTgl').value < hariIni()) { $('#fErr').textContent = 'Tanggal rencana tidak boleh sebelum hari ini.'; btn.disabled = false; btn.textContent = 'Simpan'; return; }
     api('simpanTransaksi', state.token, j, {
       id: state.edit ? state.edit.id : '',
       tanggal: $('#fTgl').value, kategori: kategori,
       keterangan: $('#fKet').value.trim(), jumlah: jumlah
     }).then(function () {
       $('#dlgTrx').close();
+      if (rc) {
+        // rencana tidak memengaruhi saldo; yang bertanggal hari ini langsung dicatat server
+        toast($('#fTgl').value <= hariIni() ? 'Tanggalnya hari ini, langsung dicatat' : (state.edit ? 'Rencana diubah' : 'Rencana disimpan'));
+        cache.bersih();
+        muatRencana(j.slice(8));
+        muat();
+        return;
+      }
       toast(state.edit ? 'Perubahan disimpan' : 'Catatan disimpan');
       var item = {
         id: state.edit ? state.edit.id : 'baru' + Date.now(),
@@ -811,14 +1074,16 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
       };
       var t = item.tanggal.slice(0, 7);
       cache.bersih();
-      if (!state.semua[j] && t !== state.bulan) {
+      // filter dilepas bila catatan berada di luar rentang, agar langsung terlihat
+      if (filterAktif(j) && !dalamRentang(j, item.tanggal)) { setRentang(j, '', ''); }
+      if (!filterAktif(j) && t !== state.bulan) {
         state.bulan = t; $('#bulan').value = t;
       } else {
         // tampilkan hasilnya segera, lalu selaraskan dengan server di latar belakang
         var daftar = state.data[j].filter(function (x) { return x.id !== item.id; });
-        if (state.semua[j] || t === state.bulan) daftar.push(item);
+        daftar.push(item);
         daftar.sort(function (a, b) { return a.tanggal !== b.tanggal ? (a.tanggal < b.tanggal ? 1 : -1) : b.urut - a.urut; });
-        cache.set(kunciTrx(j, state.semua[j] ? '' : state.bulan), { items: daftar });
+        cache.set(kunciTrx(j, bulanMuat(j)), { items: daftar });
       }
       muat();
     }).catch(function (err) {
@@ -833,10 +1098,17 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
     var h = state.hapus, btn = this;
     btn.disabled = true;
     api('hapusTransaksi', state.token, h.jenis, h.id).then(function () {
-      $('#dlgDel').close(); toast('Catatan dihapus');
+      $('#dlgDel').close();
+      if (h.jenis.indexOf('rencana_') === 0) {
+        toast('Rencana dihapus');
+        cache.bersih();
+        muatRencana(h.jenis.slice(8));
+        return;
+      }
+      toast('Catatan dihapus');
       var sisa = state.data[h.jenis].filter(function (x) { return x.id !== h.id; });
       cache.bersih();
-      cache.set(kunciTrx(h.jenis, state.semua[h.jenis] ? '' : state.bulan), { items: sisa });
+      cache.set(kunciTrx(h.jenis, bulanMuat(h.jenis)), { items: sisa });
       muat();
     }).catch(function (err) {
       $('#dlgDel').close(); galat(err);
@@ -861,7 +1133,7 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
 
   /* ---------- event global ---------- */
   document.addEventListener('click', function (e) {
-    var el = e.target.closest('[data-nav],[data-tambah],[data-aksi],[data-tutup],.js-pw,.js-out');
+    var el = e.target.closest('[data-nav],[data-tambah],[data-aksi],[data-rc],[data-tutup],.js-pw,.js-out');
     if (el) {
       if (el.hasAttribute('data-nav')) { tampil(el.getAttribute('data-nav')); return; }
       if (el.hasAttribute('data-tambah')) { bukaForm(el.getAttribute('data-tambah')); return; }
@@ -871,6 +1143,16 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
         $('#dlgPw').showModal(); $('#pLama').focus(); return;
       }
       if (el.classList.contains('js-out')) { keluarAkun(); return; }
+      if (el.hasAttribute('data-rc')) {
+        var b = state.view, rid = el.getAttribute('data-id');
+        var rit = state.rencana[b].filter(function (t) { return t.id === rid; })[0];
+        if (!rit) return;
+        if (el.getAttribute('data-rc') === 'ubah') { bukaForm('rencana_' + b, rit); return; }
+        state.hapus = { jenis: 'rencana_' + b, id: rid };
+        $('#delInfo').textContent = 'Rencana ' + rit.kategori + ' sebesar ' + rp(rit.jumlah) + ' pada ' + tgl(rit.tanggal) + '.';
+        $('#dlgDel').showModal();
+        return;
+      }
       if (el.hasAttribute('data-aksi')) {
         var j = state.view, id = el.getAttribute('data-id');
         var item = state.data[j].filter(function (t) { return t.id === id; })[0];
@@ -913,7 +1195,7 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
   $('#bulan').addEventListener('change', function () {
     if (/^\d{4}-\d{2}$/.test(this.value)) ubahBulan(this.value);
   });
-  function ubahBulan(b) { state.bulan = b; $('#bulan').value = b; muat(); }
+  function ubahBulan(b) { resetTgl(); state.bulan = b; $('#bulan').value = b; muat(); }
 
   /* ---------- mulai ---------- */
   bangunList('masuk');
@@ -930,6 +1212,42 @@ dialog::backdrop{background:rgba(18,38,46,.55)}
         else store.del();
       }).catch(function () {});
     }
+  }
+
+  /* ---------- tombol kembali (Android) ---------- */
+  // Tombol kembali TIDAK keluar dari aplikasi. Fungsinya hanya menutup kalender/dialog/form
+  // dan menghapus kata kunci pencarian; bila tidak ada yang bisa ditutup, tidak terjadi apa-apa.
+  function tanganiKembali() {
+    var sheet = $('#shBg');
+    if (sheet && !sheet.hidden) { tutupSheet(); return; }
+
+    var dlg = $('dialog[open]');
+    if (dlg) { dlg.close(); return; }
+
+    var j = state.view;
+    if ((j === 'masuk' || j === 'keluar') && state.cari[j]) {
+      state.cari[j] = '';
+      $('#q-' + j).value = '';
+      renderList(j);
+    }
+  }
+
+  if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+    var jagaKembali = false;
+    // Riwayat penjaga dipasang setelah pengguna menyentuh layar, karena Chrome
+    // melewati entri riwayat yang dibuat tanpa interaksi pengguna.
+    var pasangJaga = function () {
+      if (jagaKembali) return;
+      jagaKembali = true;
+      try { history.pushState({ bk: 1 }, ''); } catch (e) {}
+    };
+    document.addEventListener('pointerdown', pasangJaga, true);
+    document.addEventListener('keydown', pasangJaga, true);
+    window.addEventListener('popstate', function () {
+      if (!jagaKembali) return;
+      tanganiKembali();
+      try { history.pushState({ bk: 1 }, ''); } catch (e) {}
+    });
   }
 
   // Pembaruan otomatis di latar belakang
